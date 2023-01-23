@@ -1,16 +1,19 @@
+# Stable Diffusion config for running on WebServer 
 
-** Origin
+This is a config setup to make fast tests of Stable Diffusion AI models on a webserver. It is also pre-configured to run alongside TaChiKu (see tachiku.com)
+
+## Origin
  - https://github.com/CompVis/stable-diffusion
 
-** TEST samples
+## TEST samples
  - python scripts/txt2img.py --prompt "dali painting of van gogh flowers with a touch of gustav klimt" --plms --ckpt models/ldm/stable-diffusion-v1/sd-v1-4.ckpt --outdir _output
  - python scripts/img2img.py  --init-img _input/zombie.jpg --strength 0.35 --ckpt models/ldm/stable-diffusion-v1/sd-v1-4.ckpt --outdir _output  --n_samples 4
 
-** BATCH MODE RUN
+## BATCH MODE RUN
 // to run DIFFUSION in BATCH mode (not a server), use: 
  - runlocal_txt2img.bat  (it has its entry point with runlocal_txt2img.py, then making use of scripts/txt2img.py)
 
-** SERVER MODE RUN
+## SERVER MODE RUN
 // the python servers are built with FLASK ; when debugging (not in docker), it needs a FLASK app defined to run
 // in windows (when debugging) use :  $env:FLASK_APP="flask_5000"
 // in linux / wsl, use :  FLASK_APP="flask_5000"
@@ -22,14 +25,16 @@
   // remember this localhost runs on http://192.168.1.108:5004/   so this is where we can access it (nowhere else, all other pings fail)
   // http://localhost:5004/run?uid=0&token=0&username=bob&orig=http%3A%2F%2Flocalhost%3A3654%2F&odir=_output&output=result&prompts=zombie&cimg=4&strength=0.7&steps=10&seed=10&input=_input%2Fzombie.jpg
   
-** DOCKER MODE (SERVER) RUN
+## DOCKER MODE (SERVER) RUN
+
+// Build commands: 
 docker build -t yeepeekoo/my_images:ai_diffusion .
 docker push yeepeekoo/my_images:ai_diffusion
 
-// on windows
+// to run it on windows
 docker run -it -v "$(pwd)/_input:/src/app/_input" -v "$(pwd)/_output:/src/app/_output" --name ai_diffusion --rm --gpus all --publish 5004:5000 yeepeekoo/my_images:ai_diffusion
 
-// on WLS => same (but GPU should work!)
+// to run on Linus / WLS => same (but GPU should work!)
 
 // to run PING in docker server mode (localhost:5001), see instructions in flask_5000.py  (we can also run it locally in flask for debug before running the flask app in docker)
 // list of files in root : localhost:5004/root
